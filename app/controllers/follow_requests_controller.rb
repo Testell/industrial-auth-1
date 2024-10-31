@@ -73,10 +73,12 @@ class FollowRequestsController < ApplicationController
     def is_recipient
       if current_user != @follow_request.recipient
         redirect_back fallback_location: root_url, alert: "Not authorized"
+      end
     end
 
     def is is_authorized_user
       if current_user != @follow_request.sender || @follow_request.recipient
         redirect_back fallback_location: root_url, alert: "Not authorized"
+      end
     end
 end
