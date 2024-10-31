@@ -11,8 +11,26 @@ class UserPolicy
   end
 
   def show?
-    user == curent_user? ||
+    user == current_user ||
     !user.private? ||
     user.followers.include?(current_user)
+  end
+
+  def liked?
+    user == current_user ||
+    !user.private? || 
+    user.followers.include?(current_user)
+  end
+
+  def discover?
+    user == current_user
+  end
+
+  def followers?
+    false
+  end
+
+  def following?
+    false
   end
 end

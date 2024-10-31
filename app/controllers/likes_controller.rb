@@ -1,6 +1,7 @@
 class LikesController < ApplicationController
-  before_action :set_like, only: %i[ show edit update destroy ]
-
+  before_action :set_like, only: %i[ show edit update destroy is_owner ]
+  before_action :is_owner, only: [:create, :destroy]
+  
   # GET /likes or /likes.json
   def index
     @likes = Like.all
@@ -57,6 +58,11 @@ class LikesController < ApplicationController
   end
 
   private
+    def is_owner
+      if current_user != @like.fan
+        redirect_back fallback_location: root_url, alert: "Not authorized"
+    end
+    
     # Use callbacks to share common setup or constraints between actions.
     def set_like
       @like = Like.find(params[:id])

@@ -3,7 +3,26 @@ class UsersController < ApplicationController
 
   def feed
     authorize @user
-    @photos = @user.feed
+  end
+
+  def show
+    authorize @user
+  end
+
+  def liked
+    authorize @user
+  end
+
+  def discover
+    authorize @user
+  end
+
+  def followers
+    authorize @user
+  end
+
+  def following
+    authorize @user
   end
 
   private
