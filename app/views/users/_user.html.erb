@@ -48,7 +48,7 @@
 
         <% end %>
       </div>
-
+    <% if user == current_user%>
       <div class="col">
         <%=
           link_to "#",
@@ -65,6 +65,7 @@
 
         <% end %>
       </div>
+      <% end %>
     </div>
 
     <div class="row mb-3">
@@ -94,23 +95,24 @@
         <% end %>
       </div>
     </div>
-
-    <div class="row mb-4">
-      <div class="col">
-        <% follow_request = current_user.sent_follow_requests.find_by(recipient: @user) %>
-        <% if follow_request %>
-          <%= link_to follow_request, data: { turbo_method: :delete }, class: "btn btn-outline-secondary btn-block" do %>
-            <% if follow_request.pending? %>
-              Un-request
-            <% else %>
-              Un-follow
+    <% if user != current_user %>
+      <div class="row mb-4">
+        <div class="col">
+          <% follow_request = current_user.sent_follow_requests.find_by(recipient: @user) %>
+          <% if follow_request %>
+            <%= link_to follow_request, data: { turbo_method: :delete }, class: "btn btn-outline-secondary btn-block" do %>
+              <% if follow_request.pending? %>
+                Un-request
+              <% else %>
+                Un-follow
+              <% end %>
             <% end %>
+          <% else %>
+            <%= render "follow_requests/form", follow_request: @user.received_follow_requests.build %>
           <% end %>
-        <% else %>
-          <%= render "follow_requests/form", follow_request: @user.received_follow_requests.build %>
-        <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <h3 class="h5">
       <%= user.name %>
