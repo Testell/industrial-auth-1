@@ -52,7 +52,7 @@ class FollowRequestsController < ApplicationController
   end
 
   # DELETE /follow_requests/1 or /follow_requests/1.json
-  def 
+  def destroy
     authorize @follow_request
     @follow_request.destroy
     respond_to do |format|
@@ -62,25 +62,25 @@ class FollowRequestsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_follow_request
-      @follow_request = FollowRequest.find(params[:id])
-    end
+  def set_follow_request
+    @follow_request = FollowRequest.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def follow_request_params
-      params.require(:follow_request).permit(:recipient_id, :sender_id, :status)
+  # Only allow a list of trusted parameters through.
+  def follow_request_params
+    params.require(:follow_request).permit(:recipient_id, :sender_id, :status)
+  end
+
+  def is_sender
+    if current_user != @follow_request.sender
+      redirect_back fallback_location: root_url, alert: "Not authorized"
+    end
+  end
+
+  def is_recipient
+    if current_user != @follow_request.sender
+      redirect_back fallback_location: root_url, alert: "Not authorized"
+    end
+  end
     
-      
-    def is_sender
-      if current_user != @follow_request.sender
-        redirect_back fallback_location: root_url, alert: "Not authorized"
-      end
-    end
-
-    def is_recipient
-      if current_user != @follow_request.sender
-        redirect_back fallback_location: root_url, alert: "Not authorized"
-      end
-    end
 end

@@ -33,4 +33,5 @@ class UserPolicy
   def following?
     false
   end
+  
 end
