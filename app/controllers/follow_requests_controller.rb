@@ -3,11 +3,12 @@ class FollowRequestsController < ApplicationController
 
   # GET /follow_requests or /follow_requests.json
   def index
-    @follow_requests = FollowRequest.all
+    @follow_requests = policy_scope(FollowRequest)
   end
 
   # GET /follow_requests/1 or /follow_requests/1.json
   def show
+    authorize @follow_request
   end
 
   # GET /follow_requests/new
@@ -21,9 +22,9 @@ class FollowRequestsController < ApplicationController
 
   # POST /follow_requests or /follow_requests.json
   def create
-    authorize @follow_request
     @follow_request = FollowRequest.new(follow_request_params)
     @follow_request.sender = current_user
+    authorize @follow_request
 
     respond_to do |format|
       if @follow_request.save
@@ -51,7 +52,7 @@ class FollowRequestsController < ApplicationController
   end
 
   # DELETE /follow_requests/1 or /follow_requests/1.json
-  def destroy
+  def 
     authorize @follow_request
     @follow_request.destroy
     respond_to do |format|
@@ -69,5 +70,17 @@ class FollowRequestsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def follow_request_params
       params.require(:follow_request).permit(:recipient_id, :sender_id, :status)
+    
+      
+    def is_sender
+      if current_user != @follow_request.sender
+        redirect_back fallback_location: root_url, alert: "Not authorized"
+      end
+    end
+
+    def is_recipient
+      if current_user != @follow_request.sender
+        redirect_back fallback_location: root_url, alert: "Not authorized"
+      end
     end
 end

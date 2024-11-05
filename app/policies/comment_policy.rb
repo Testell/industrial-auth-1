@@ -7,8 +7,12 @@ class CommentPolicy < ApplicationPolicy
     @comment = comment
   end
 
+  def index?
+    false
+  end
+
   def show?
-    user == comment.author
+    false
   end
 
   def create?
@@ -16,7 +20,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def new?
-    create?
+    true
   end
 
   def update?
@@ -24,14 +28,11 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def edit?
-    update?
+    user == comment.author
   end
 
   def destroy?
     user == comment.author
   end
 
-  class Scope < ApplicationPolicy::Scope
-   
-  end
 end
